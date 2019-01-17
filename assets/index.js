@@ -1,5 +1,3 @@
-document.addEventListener("DOMContentLoaded", boot);
-
 function cssFunc(name, args) {
     return (
         name +
@@ -17,17 +15,12 @@ function pct(a) {
     return (a * 100).toString() + "%";
 }
 
-function pctpt(x, y) {
-    return pct(x) + " " + pct(y);
+function deg(a) {
+    return a.toString() + "deg";
 }
 
-function split(top, bottom) {
-    return cssFunc("polygon", [
-        pctpt(top, 0),
-        pctpt(1, 0),
-        pctpt(1, 1),
-        pctpt(bottom, 1),
-    ]);
+function px(a) {
+    return a.toString() + "px";
 }
 
 function randrange(min, max) {
@@ -38,13 +31,29 @@ function boot() {
     // Prelude
     var $wrapper = document.getElementById("wrapper");
     var $bg = document.getElementById("bg");
-    var $content = document.getElementById("content");
+    var $point = document.getElementById("point");
 
-    // A subtle clue
-    $bg.style.clipPath = split(randrange(0.3, 0.7), randrange(0.3, 0.7));
-    $bg.style.backgroundColor = randomColor({});
+    function draw() {
+        // A subtle clue
+        $bg.style.transform = cssFunc("skew", [
+            deg(randrange(0, 120)),
+            deg(randrange(0, 120)),
+        ]);
+        $bg.style.webkitTransform = $bg.style.transform;
+        $bg.style.backgroundColor = randomColor();
 
-    // Making the eye wander
-    $content.style.top = pct(randrange(0.1, 0.5));
-    $content.style.left = pct(randrange(0.2, 0.7));
+        // Making the eye wander
+        var diameter = px(randrange(20, 70));
+        $point.style.top = pct(randrange(0.1, 0.9));
+        $point.style.left = pct(randrange(0.1, 0.9));
+        $point.style.width = diameter;
+        $point.style.height = diameter;
+    }
+
+    $point.addEventListener("click", draw);
+    draw();
+
+    console.log("This experience by https://www.carlsverre.com");
 }
+
+document.addEventListener("DOMContentLoaded", boot);
